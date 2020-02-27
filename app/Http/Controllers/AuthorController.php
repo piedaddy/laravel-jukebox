@@ -23,6 +23,11 @@ class AuthorController extends Controller
     //this method's purpose is to insert new Author object into the database
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required',
+            'nationality' => 'required',
+        ]); //if it fails the user will stay on the same page or i mean like go back one 
+    
         // dd('HERE ARE WE'); dd is a cool weird thing!!! 
 
         //we need to:
@@ -38,6 +43,9 @@ class AuthorController extends Controller
         $author->nationality = $request->input('nationality');
 
         $author->save(); // will do an insert, not an updates
+        
+        session()->flash('success_message', 'Success!');
+
     
         
         //post redirect-get PRG
@@ -54,11 +62,19 @@ class AuthorController extends Controller
     //update existing author author in the database
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'name' => 'required',
+            'nationality' => 'required',
+        ]); //if it fails the user will stay on the same page or i mean like go back one 
+
         //select existing object Author from the database based on the ID
         $author = Author::findOrfail($id);
         $author->name = $request->input('name');
         $author->nationality = $request->input('nationality');
         $author->save(); 
+        
+        session()->flash('success_message', 'Success!');
+
         //post redirect-get PRG
         return redirect('author/'.$author->id.'/edit');
     }
